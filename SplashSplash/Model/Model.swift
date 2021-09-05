@@ -15,7 +15,6 @@ struct PhotosList: Codable {
 
 struct Photo: Codable {
     var id: String
-//    var description: String?
     var likes: Int
     var urls: Urls
 }

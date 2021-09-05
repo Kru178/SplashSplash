@@ -30,12 +30,6 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func buttonPressed(_ sender: UIButton) {
-        performSegue(withIdentifier: "toPhotos", sender: self)
+        performSegue(withIdentifier: Segue.toPhotos, sender: self)
     }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        performSegue(withIdentifier: "toPhotos", sender: self)
-        return true
-    }
-    
 }

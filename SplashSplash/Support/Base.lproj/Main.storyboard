@@ -113,7 +113,7 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="fLx-21-jf2">
-                        <barButtonItem key="rightBarButtonItem" title="Sort" image="line.horizontal.3.decrease" catalog="system" id="UwF-R1-Bxf">
+                        <barButtonItem key="rightBarButtonItem" title="Sort" id="UwF-R1-Bxf">
                             <connections>
                                 <action selector="sortPressed:" destination="nXl-oY-s79" id="6Gw-3r-blt"/>
                             </connections>
@@ -191,7 +191,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="line.horizontal.3.decrease" catalog="system" width="128" height="73"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

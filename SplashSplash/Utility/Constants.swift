@@ -9,6 +9,17 @@ import Foundation
 
 enum Sort {
     static let latest = "latest"
-    static let oldest = "oldest"
-    static let popular = "popular"
+    static let relevant = "relevant"
+    static let landscape = "landscape"
+    static let portrait = "portrait"
+    static let squarish = "squarish"
+}
+
+enum Segue {
+    static let toPhotos = "toPhotos"
+    static let toDetail = "toDetail"
+}
+
+enum CellReuseIdentifier {
+    static let photoCell = "photoCell"
 }

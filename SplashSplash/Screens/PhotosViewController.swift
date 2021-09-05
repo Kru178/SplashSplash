@@ -17,10 +17,16 @@ class PhotosViewController: UICollectionViewController {
     var totalPages = 1
     var isLoading = false
     var selectedID: String?
-    var currentOrder = Sort.latest {
+    var currentOrder = Sort.relevant {
         didSet {
             self.photos.removeAll()
-            self.loadPhotos(for: self.text, order: self.currentOrder, page: self.page)
+            self.loadPhotos(for: self.text, order: self.currentOrder, page: self.page, orientation: nil)
+        }
+    }
+    var currentFilter: String? = nil {
+        didSet {
+            self.photos.removeAll()
+            self.loadPhotos(for: self.text, order: self.currentOrder, page: self.page, orientation: self.currentFilter)
         }
     }
     
@@ -31,14 +37,14 @@ class PhotosViewController: UICollectionViewController {
         view.backgroundColor = .blue
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.backgroundColor = .cyan
-        loadPhotos(for: text, order: currentOrder, page: page)
+        loadPhotos(for: text, order: currentOrder, page: page, orientation: nil)
         collectionView.collectionViewLayout = UIHelper.createTwoColumnFlowLayout(in: view)
         collectionView.alwaysBounceVertical = true
     }
     
-    func loadPhotos(for word: String, order: String, page: Int) {
+    func loadPhotos(for word: String, order: String, page: Int, orientation: String?) {
         isLoading = true
-        NetworkService.shared.getPhotos(for: word, page: page, order: order) { result in
+        NetworkService.shared.getPhotos(for: word, page: page, order: order, orientation: orientation) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let list):
@@ -61,7 +67,7 @@ class PhotosViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! CollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellReuseIdentifier.photoCell, for: indexPath) as! CollectionViewCell
         
         cell.setup(with: photos[indexPath.row])
         return cell
@@ -71,7 +77,7 @@ class PhotosViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedID = photos[indexPath.item].id
-        performSegue(withIdentifier: "toDetail", sender: self)
+        performSegue(withIdentifier: Segue.toDetail, sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -87,22 +93,30 @@ class PhotosViewController: UICollectionViewController {
         if offsetY > contentHeight - height {
             guard page <= totalPages, !isLoading else { return }
             page += 1
-            loadPhotos(for: text, order: currentOrder, page: page)
+            loadPhotos(for: text, order: currentOrder, page: page, orientation: currentFilter)
         }
     }
-
+    
     @IBAction func sortPressed(_ sender: UIBarButtonItem) {
         let ac = UIAlertController(title: "Sort by", message: nil, preferredStyle: .actionSheet)
         ac.addAction(UIAlertAction(title: "Latest", style: .default, handler: { action in
             self.currentOrder = Sort.latest
             self.page = 1
         }))
-        ac.addAction(UIAlertAction(title: "Oldest", style: .default, handler: { action in
-            self.currentOrder = Sort.oldest
+        ac.addAction(UIAlertAction(title: "Relevant", style: .default, handler: { action in
+            self.currentOrder = Sort.relevant
             self.page = 1
         }))
-        ac.addAction(UIAlertAction(title: "Popular", style: .default, handler: { action in
-            self.currentOrder = Sort.popular
+        ac.addAction(UIAlertAction(title: "Landscape", style: .default, handler: { action in
+            self.currentFilter = Sort.landscape
+            self.page = 1
+        }))
+        ac.addAction(UIAlertAction(title: "Portrait", style: .default, handler: { action in
+            self.currentFilter = Sort.portrait
+            self.page = 1
+        }))
+        ac.addAction(UIAlertAction(title: "Squarish", style: .default, handler: { action in
+            self.currentFilter = Sort.squarish
             self.page = 1
         }))
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
