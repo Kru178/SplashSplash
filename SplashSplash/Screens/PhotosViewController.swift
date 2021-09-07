@@ -42,9 +42,10 @@ class PhotosViewController: UICollectionViewController {
         collectionView.alwaysBounceVertical = true
     }
     
-    func loadPhotos(for word: String, order: String, page: Int, orientation: String?) {
+    private func loadPhotos(for word: String, order: String, page: Int, orientation: String?) {
         isLoading = true
-        NetworkService.shared.getPhotos(for: word, page: page, order: order, orientation: orientation) { result in
+        NetworkService.shared.getPhotos(for: word, page: page, order: order, orientation: orientation) { [weak self] result in
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .success(let list):

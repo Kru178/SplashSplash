@@ -26,7 +26,8 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as! PhotosViewController
-        vc.text = searchTF.text!
+        guard let text = searchTF.text else { return }
+        vc.text = text
     }
     
     @IBAction func buttonPressed(_ sender: UIButton) {
